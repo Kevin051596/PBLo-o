@@ -5,16 +5,6 @@ import numpy as np
 from pydub import AudioSegment
 import wave
 
-'''
-sound = AudioSegment.from_wav("D:\PBL\TESTA1.wav")
-f = wave.open("TESTA1.wav",'wb')
-f.setnchannels(1)   # 频道数
-f.setsampwidth(2)   # 量化位数
-f.setframerate(16000)   # 取样频率
-f.setnframes(len(sound._data))   # 取样点数，波形数据的长度
-f.writeframes(sound._data)   # 写入波形数据
-f.close()
-'''
 
 #導入音檔
 y=[0]*6
@@ -37,7 +27,7 @@ j=0
 for i in range(6):
     CQT[i] = librosa.amplitude_to_db(librosa.cqt(y[i],sr=16000),ref=np.max)
     img =librosa.display.specshow(CQT[i],x_axis='time',y_axis='cqt_note',ax=ax[j,k])
-    fig.colorbar(img,ax=ax[j,k],format="%+2.0f dB")
+    #fig.colorbar(img,ax=ax[j,k],format="%+2.0f dB")
     ax[j,k].set(title='Constant-Q F{}'.format(i+2))
     ax[j,k].set(ylabel='CQT')
     if(k==3): 
