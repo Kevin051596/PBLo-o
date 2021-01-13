@@ -2,17 +2,21 @@ import librosa
 import librosa.display
 from matplotlib import pyplot as plt
 import numpy as np
-from pydub.audio_segment import AudioSegment
+from playsound import playsound
+ 
+#playsound('piano-C4.wav')
+
 
 #導入音檔
-y, sr = librosa.load("D:\PBL\C42.wav",22050,duration=1.0)
+y, sr = librosa.load("D:\PBL\Flute-C4.wav",22050,duration=2.0)
 #設定網格
 fig, ax = plt.subplots()
 #製圖
-img = librosa.display.specshow(librosa.amplitude_to_db(librosa.cqt(y,sr=16000),ref=np.max),
-                               sr=sr, x_axis='time', y_axis='cqt_note', ax=ax)
-ax.set_title(' Piano spectrum')
+CQT = librosa.amplitude_to_db(librosa.cqt(y,sr=sr),ref=np.max)
+img = librosa.display.specshow(CQT,sr=sr, x_axis='time', y_axis='cqt_note', ax=ax)
+ax.set_title(' Flute-C4 spectrum')
 #fig.colorbar(img, ax=ax, format="%+2.0f dB")
 #屬性設置怪怪的
 
 plt.show()
+print(CQT)
