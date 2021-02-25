@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.sound.sampled.*;
- 
+
 public class record extends JFrame implements ActionListener{
  
 	//定義錄音格式
