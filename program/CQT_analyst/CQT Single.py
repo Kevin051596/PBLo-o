@@ -8,7 +8,7 @@ playsound('piano-C4.wav')
 
 
 #導入音檔
-y, sr = librosa.load('D:\PBL\music_3.wav',44100,duration=10)
+y, sr = librosa.load('D:\PBL\music_3.wav',44100,duration=5)
 #設定網格
 fig, ax = plt.subplots()
 #製圖

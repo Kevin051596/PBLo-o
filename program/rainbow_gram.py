@@ -5,7 +5,15 @@ import matplotlib.pyplot as plt
 matplotlib.rcParams['svg.fonttype'] = 'none'
 import numpy as np
 from scipy.io.wavfile import read as readwav
+from matplotlib import animation
+import matplotlib as mpl
+from matplotlib import cm
+from collections import OrderedDict
+import librosa.display
+import pandas
 
+cmaps = OrderedDict()
+cmaps['Miscellaneous'] = ['rainbow']
 # Constants
 n_fft = 512
 hop_length = 256
@@ -14,6 +22,7 @@ over_sample = 4
 res_factor = 0.8
 octaves = 6
 notes_per_octave=5
+min = 0.34
 
 # Plotting functions
 cdict  = {
@@ -32,6 +41,11 @@ cdict  = {
 my_mask = matplotlib.colors.LinearSegmentedColormap('MyMask', cdict)
 plt.register_cmap(cmap=my_mask)
 
+def show_sample(list):
+    print(list)
+    df = pandas.DataFrame(data=list)
+    df.to_excel("test0.35.xlsx")
+
 def note_specgram(path, ax, peak=70.0, use_cqt=True):
   # Add several samples together
   '''
@@ -43,7 +57,7 @@ def note_specgram(path, ax, peak=70.0, use_cqt=True):
   else:  
     '''  
   #sr, audio = readwav(path)
-  audio, sr = librosa.load(path,22050)
+  audio, sr = librosa.load(path,44100,duration= 5)
   audio = audio.astype(np.float)
   if use_cqt:
     C = librosa.cqt(audio, sr=sr, hop_length=hop_length, 
@@ -61,8 +75,13 @@ def note_specgram(path, ax, peak=70.0, use_cqt=True):
   dphase = np.concatenate([phase_unwrapped[:, 0:1], dphase], axis=1) / np.pi
   #mag = (librosa.logamplitude(mag**2, amin=1e-13, top_db=peak, ref_power=np.max) / peak) + 1
   mag = (librosa.power_to_db(mag ** 2, amin=1e-13, top_db=peak, ref=np.max) / peak) + 1
-  ax.matshow(mag[::-1, :], cmap=plt.cm.rainbow)
-  ax.matshow(mag[::-1, :], cmap=my_mask)
+  mag[mag < min] = 0.2
+  #ax.matshow(mag[:: -1, :], cmap=plt.cm.rainbow)
+  ax.matshow(mag[:: -1, :], cmap=plt.get_cmap('rainbow'))
+  ax.matshow(mag[:: -1, :], cmap=my_mask)
+  #show_sample(mag)
+  
+  
 
 def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
               use_cqt=True, peak=70.0):
@@ -97,9 +116,4 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
       ax.set_ylabel(row_labels[row])
     if row == rows-1 and col_labels:
       ax.set_xlabel(col_labels[col])
-
-if __name__ == "__main__":
-  fig, axes = plt.subplots(2,1,sharex ='col',sharey ='row')
-  list_1 = ['D:\PBL\Test_fr002\piano-C6.wav','D:\PBL\music_3.wav']
-  plot_notes(list_1)
-  plt.show()
+  
