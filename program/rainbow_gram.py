@@ -57,7 +57,7 @@ def note_specgram(path, ax, peak=70.0, use_cqt=True):
   else:  
     '''  
   #sr, audio = readwav(path)
-  audio, sr = librosa.load(path,44100,duration= 5)
+  audio, sr = librosa.load(path,44100,duration= 8)
   audio = audio.astype(np.float)
   if use_cqt:
     C = librosa.cqt(audio, sr=sr, hop_length=hop_length, 
@@ -79,6 +79,7 @@ def note_specgram(path, ax, peak=70.0, use_cqt=True):
   #ax.matshow(mag[:: -1, :], cmap=plt.cm.rainbow)
   ax.matshow(mag[:: -1, :], cmap=plt.get_cmap('rainbow'))
   ax.matshow(mag[:: -1, :], cmap=my_mask)
+  plt.yticks([20, 40, 60, 80, 100],['C7', 'C6', 'C5', 'C4', 'C3'])
   #show_sample(mag)
   
   
