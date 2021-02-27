@@ -2,7 +2,8 @@ import time
 import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
-from rainbow_gram import note_specgram
+from rainbow_gram import note_specgram 
+from rainbow_gram import plot_notes
 from cosine import image_similarity_vectors_via_numpy
 from hash import aHash
 from hash import pHash
@@ -16,11 +17,11 @@ def recommend(cosin):
         print('加油')
 
 
-fig, ax = plt.subplots()
-note_specgram('D:\PBL\C4.wav', ax)
-#list_1 = ['D:\PBL\music_2.wav']
-#plot_notes(list_1)
-fig.savefig('plot2.png')
+#note_specgram('D:\PBL\C4.wav', ax)
+list_1 = ['D:\PBL\C4.wav','D:\PBL\C4.wav']
+plot_notes(list_1)
+plt.show()
+
 
 raw_img1 = r'D:\PBL\Program\Record\result_map\plot.png'
 raw_img2 = r'D:\PBL\Program\Record\result_map\plot2.png'

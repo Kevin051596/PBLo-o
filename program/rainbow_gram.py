@@ -14,6 +14,8 @@ import pandas
 
 cmaps = OrderedDict()
 cmaps['Miscellaneous'] = ['rainbow']
+labels = ['C7', 'C6', 'C5', 'C4', 'C3']
+y = np.arange(len(labels))
 # Constants
 n_fft = 512
 hop_length = 256
@@ -47,7 +49,7 @@ def show_sample(list):
     df = pandas.DataFrame(data=list)
     df.to_excel("test0.35.xlsx")
 
-def note_specgram(path, ax, peak=70.0, use_cqt=True):
+def note_specgram(path, ax, i, peak=70.0, use_cqt=True):
   # Add several samples together
   '''
   if isinstance(path, list):
@@ -77,11 +79,14 @@ def note_specgram(path, ax, peak=70.0, use_cqt=True):
   #mag = (librosa.logamplitude(mag**2, amin=1e-13, top_db=peak, ref_power=np.max) / peak) + 1
   mag = (librosa.power_to_db(mag ** 2, amin=1e-13, top_db=peak, ref=np.max) / peak) + 1
   mag[mag < min] = 0.2
-  ax.matshow(mag[:: -1, :], cmap=plt.cm.rainbow)
+  if (i+1)%2 == 0 : 
+    ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('brg'))
+  else :
+    ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('rainbow'))   
   ax.matshow(mag[:: -1, :], cmap=my_mask)
   #show_sample(mag)
-  plt.yticks([20, 40, 60, 80, 100],['C7', 'C6', 'C5', 'C4', 'C3'])
-  ax.xaxis.set_visible(False)
+  #plt.yticks([20, 40, 60, 80, 100],['C7', 'C6', 'C5', 'C4', 'C3'])
+  #ax.xaxis.set_visible(False)
   
 
   
@@ -96,10 +101,9 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
     assert N == rows*cols
   except AssertionError:
     print ('N != rows*col')
-  fig, axes = plt.subplots(rows, cols, sharex=True, sharey=True)
+  fig, axes = plt.subplots(rows, cols, figsize=(10, 4.5), sharex='col', sharey='row')
   fig.subplots_adjust(left=0.1, right=0.9, wspace=0.05, hspace=0.1)
-
-  #fig = plt.figure(figsize=(18, N * 1.25))
+  
   for i, path in enumerate(list_of_paths):
     row = (int)(i / cols)
     col = (int)(i % cols)
@@ -111,7 +115,7 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
       ax = axes[row, col]
     
     print (row, col, path, ax, peak, use_cqt)
-    results = note_specgram(path, ax, peak, use_cqt)
+    note_specgram(path, ax, i, peak, use_cqt)
     '''
     def init():
         line = ax.matshow(results[:: -1, : 200], cmap=plt.get_cmap('rainbow'))
@@ -131,11 +135,16 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
     animation.save('redraw.gif', writer='imagemagick')
     '''
     ax.set_facecolor('white')
-    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_yticks([20, 40, 60, 80, 100])
+    ax.set_yticklabels(['C7', 'C6', 'C5', 'C4', 'C3'])
+    ax.set_xticks([])
     if col == 0 and row_labels:
       ax.set_ylabel(row_labels[row])
     if row == rows-1 and col_labels:
       ax.set_xlabel(col_labels[col])
+
+  fig.savefig('plot3.png')
+    
 
    
   
