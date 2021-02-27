@@ -41,6 +41,7 @@ cdict  = {
 my_mask = matplotlib.colors.LinearSegmentedColormap('MyMask', cdict)
 plt.register_cmap(cmap=my_mask)
 
+
 def show_sample(list):
     print(list)
     df = pandas.DataFrame(data=list)
@@ -57,7 +58,7 @@ def note_specgram(path, ax, peak=70.0, use_cqt=True):
   else:  
     '''  
   #sr, audio = readwav(path)
-  audio, sr = librosa.load(path,44100,duration= 8)
+  audio, sr = librosa.load(path,44100,duration= 3)
   audio = audio.astype(np.float)
   if use_cqt:
     C = librosa.cqt(audio, sr=sr, hop_length=hop_length, 
@@ -76,14 +77,15 @@ def note_specgram(path, ax, peak=70.0, use_cqt=True):
   #mag = (librosa.logamplitude(mag**2, amin=1e-13, top_db=peak, ref_power=np.max) / peak) + 1
   mag = (librosa.power_to_db(mag ** 2, amin=1e-13, top_db=peak, ref=np.max) / peak) + 1
   mag[mag < min] = 0.2
-  #ax.matshow(mag[:: -1, :], cmap=plt.cm.rainbow)
-  ax.matshow(mag[:: -1, :], cmap=plt.get_cmap('rainbow'))
+  ax.matshow(mag[:: -1, :], cmap=plt.cm.rainbow)
   ax.matshow(mag[:: -1, :], cmap=my_mask)
-  plt.yticks([20, 40, 60, 80, 100],['C7', 'C6', 'C5', 'C4', 'C3'])
   #show_sample(mag)
-  
+  plt.yticks([20, 40, 60, 80, 100],['C7', 'C6', 'C5', 'C4', 'C3'])
+  ax.xaxis.set_visible(False)
   
 
+  
+  
 def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
               use_cqt=True, peak=70.0):
   """Build a CQT rowsXcols.
@@ -109,12 +111,31 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
       ax = axes[row, col]
     
     print (row, col, path, ax, peak, use_cqt)
-    note_specgram(path, ax, peak, use_cqt)
-    
+    results = note_specgram(path, ax, peak, use_cqt)
+    '''
+    def init():
+        line = ax.matshow(results[:: -1, : 200], cmap=plt.get_cmap('rainbow'))
+        line = ax.matshow(results[:: -1, : 200], cmap=my_mask)
+    return line,
+
+    def animate(i):
+      try:
+        ax.lines.pop(1)
+      except Exception:
+        pass
+      line = ax.matshow(results[:: -1, : 200+100*i], cmap=plt.get_cmap('rainbow'))
+      line = ax.matshow(results[:: -1, 100*i : 200+100*i], cmap=my_mask)
+    return line,
+  
+    animation = animation.FuncAnimation(fig=fig, func=animate, frames=100, init_func=init(), interval=20, blit=False)
+    animation.save('redraw.gif', writer='imagemagick')
+    '''
     ax.set_facecolor('white')
     ax.set_xticks([]); ax.set_yticks([])
     if col == 0 and row_labels:
       ax.set_ylabel(row_labels[row])
     if row == rows-1 and col_labels:
       ax.set_xlabel(col_labels[col])
+
+   
   
