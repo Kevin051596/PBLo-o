@@ -47,7 +47,7 @@ def show_sample(list):
     df = pandas.DataFrame(data=list)
     df.to_excel("test0.35.xlsx")
 
-def note_specgram(path, ax, i, peak=70.0, use_cqt=True):
+def animation_specgram(path, ax, fig, peak=70.0, use_cqt=True):
   # Add several samples together
   '''
   if isinstance(path, list):
@@ -76,12 +76,15 @@ def note_specgram(path, ax, i, peak=70.0, use_cqt=True):
   dphase = np.concatenate([phase_unwrapped[:, 0:1], dphase], axis=1) / np.pi
   mag = (librosa.power_to_db(mag ** 2, amin=1e-13, top_db=peak, ref=np.max) / peak) + 1
   mag[mag < min] = 0.2
-  if (i+1)%2 == 0 : 
-    ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('brg'))
-  else :
-    ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('rainbow'))   
-  ax.matshow(mag[:: -1, :], cmap=my_mask)
-  #show_sample(mag)
+
+  ims = []
+  for i in range(300):
+   #im = ax.matshow(mag[:: -1, i*20 : 100+(i*20)], cmap=plt.cm.get_cmap('rainbow'))  
+   im = ax.matshow(mag[:: -1, i*20 : 100+(i*20)], cmap=my_mask)  
+   ims.append([im])
+   
+  ani = animation.ArtistAnimation(fig, ims, interval=50, blit=False,repeat_delay=500)
+  ani.save('redraw.gif', writer='imagemagick')
 
 def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
               use_cqt=True, peak=70.0):
@@ -107,7 +110,7 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
       ax = axes[row, col]
     
     print (row, col, path, ax, peak, use_cqt)
-    note_specgram(path, ax, i, peak, use_cqt)
+    animation_specgram(path, ax, i, fig, peak, use_cqt)
     
     ax.set_facecolor('white')
     ax.set_yticks([20, 40, 60, 80, 100])
@@ -119,7 +122,7 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
       ax.set_xlabel(col_labels[col])
 
   fig.savefig('plot3.png')
-    
+  
 
    
   

@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
 from rainbow_gram import note_specgram 
+from animation import animation_specgram
 from rainbow_gram import plot_notes
 from cosine import image_similarity_vectors_via_numpy
 from hash import aHash
@@ -16,12 +17,11 @@ def recommend(cosin):
     else :
         print('加油')
 
-
-#note_specgram('D:\PBL\C4.wav', ax)
+#fig ,ax = plt.subplots()
+#animation_specgram('D:\PBL\C4.wav', ax , fig)
 list_1 = ['D:\PBL\C4.wav','D:\PBL\C4.wav']
 plot_notes(list_1)
 plt.show()
-
 
 raw_img1 = r'D:\PBL\Program\Record\result_map\plot.png'
 raw_img2 = r'D:\PBL\Program\Record\result_map\plot2.png'
