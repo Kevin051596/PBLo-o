@@ -118,7 +118,7 @@ def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
     if row == rows-1 and col_labels:
       ax.set_xlabel(col_labels[col])
 
-  fig.savefig('plot3.png')
+  fig.savefig('C5-C6_compare.png')
     
 
    
