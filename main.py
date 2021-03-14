@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import rainbow_gramlist
 import rainbow_gramself
+import RPCA
 import animation
 import cosine
 import hash
@@ -14,10 +15,11 @@ def recommend(cosin):
     else :
         print('加油')
 
-#animation_specgram('D:\PBL\C4.wav', ax , fig)
+animation.animat('D:\PBL\music_2.wav')
 #list_1 = ['D:\PBL\C5-C6.wav','D:\PBL\C4-C5_p.wav']
 #rainbow_gramlist.plot_notes(list_1)
-rainbow_gramself.note_specgram('D:\PBL\C3-C4 piano.wav')
+#rainbow_gramself.note_specgram('D:\PBL\music_2.wav')
+#RPCA.note_specgram('D:\PBL\music_2.wav')
 plt.show()
 
 raw_img1 = r'D:\PBL\Program\Record\result_map\music_2.png'

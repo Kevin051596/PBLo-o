@@ -23,6 +23,7 @@ notes_per_octave=5
 min = 0.34
 cmaps = OrderedDict()
 cmaps['Miscellaneous'] = ['rainbow']
+k=1
 
 # Plotting functions
 cdict  = {
@@ -47,7 +48,7 @@ def show_sample(list):
     df = pandas.DataFrame(data=list)
     df.to_excel("test0.35.xlsx")
 
-def animation_specgram(path, ax, fig, peak=70.0, use_cqt=True):
+def animation_specgram(path, peak=70.0, use_cqt=True):
   # Add several samples together
   '''
   if isinstance(path, list):
@@ -58,6 +59,7 @@ def animation_specgram(path, ax, fig, peak=70.0, use_cqt=True):
   else:  
     '''  
   #sr, audio = readwav(path)
+  fig ,ax = plt.subplots()
   audio, sr = librosa.load(path,44100,duration= 3)
   audio = audio.astype(np.float)
   if use_cqt:
@@ -76,16 +78,28 @@ def animation_specgram(path, ax, fig, peak=70.0, use_cqt=True):
   dphase = np.concatenate([phase_unwrapped[:, 0:1], dphase], axis=1) / np.pi
   mag = (librosa.power_to_db(mag ** 2, amin=1e-13, top_db=peak, ref=np.max) / peak) + 1
   mag[mag < min] = 0.2
+  return mag, ax, fig
 
-  ims = []
-  for i in range(300):
-   #im = ax.matshow(mag[:: -1, i*20 : 100+(i*20)], cmap=plt.cm.get_cmap('rainbow'))  
-   im = ax.matshow(mag[:: -1, i*20 : 100+(i*20)], cmap=my_mask)  
-   ims.append([im])
-   
-  ani = animation.ArtistAnimation(fig, ims, interval=50, blit=False,repeat_delay=500)
-  ani.save('redraw.gif', writer='imagemagick')
+def animat(path):  
+  def animate(i):
+    im1.set_data(update_data(array,i))
+    im2.set_data(update_data(array,i))
+    return im1, im2
+  def genearate_data(n):
+    data = n[:: -1, 0 : 120]
+    return data
+  def update_data(n,i):
+    data = n[:: -1, i:(i+120)]
+    return data
 
+  array,ax,fig = animation_specgram(path)
+  im1 = ax.matshow(genearate_data(array), cmap=plt.cm.get_cmap('rainbow'))  
+  im2 = ax.matshow(genearate_data(array), cmap=my_mask)
+  plt.yticks([20,40,60,80,100],['C7','C6','C5','C4','C3'])
+  ax.xaxis.set_visible(False)
+  ani = animation.FuncAnimation(fig, animate, frames=400, interval=10, save_count=10)
+  ani.save('animation.mp4')
+ 
 def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
               use_cqt=True, peak=70.0):
   """Build a CQT rowsXcols.
