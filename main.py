@@ -1,4 +1,3 @@
-import time
 import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -6,47 +5,29 @@ import rainbow_gramlist
 import rainbow_gramself
 import RPCA
 import animation
-import cosine
-import hash
+import console
 
-def recommend(cosin):
-    if cosin>0.8 :
-        print('真不錯')
-    else :
-        print('加油')
-
-animation.animat('D:\PBL\music_2.wav')
-#list_1 = ['D:\PBL\C5-C6.wav','D:\PBL\C4-C5_p.wav']
-#rainbow_gramlist.plot_notes(list_1)
-#rainbow_gramself.note_specgram('D:\PBL\music_2.wav')
-#RPCA.note_specgram('D:\PBL\music_2.wav')
+path = 'D:\PBL\music_3.wav'
+console.discription()
+begin = console.start()
+console.mp3towav(path)
+if begin == '1':
+    rainbow_gramself.note_specgram(r'D:\PBL\Program\Record\music_sample\{}.wav'.format(path[7:-4]), showdata=True)
+if begin == '2':
+    list_1 = ['D:\PBL\C5-C6.wav','D:\PBL\C4-C5_p.wav']
+    rainbow_gramlist.plot_notes(list_1)
+if begin == '3':
+    animation.animat('D:\PBL\Program\Record\music_sample\{}.wav'.format(path[7:-4]))
+if begin == '4':
+    pass
 plt.show()
+#RPCA.note_specgram('D:\PBL\music_2.wav')
 
-raw_img1 = r'D:\PBL\Program\Record\result_map\music_2.png'
-raw_img2 = r'D:\PBL\Program\Record\result_map\music.png'
-img1 = cv2.imread(raw_img1)
-img2 = cv2.imread(raw_img2)
-
-start=time.time()
-ahash_str1=hash.aHash(img1)
-ahash_str2=hash.aHash(img2)
-
-phash_str1=hash.pHash(img1)
-phash_str2=hash.pHash(img2)
-
-dhash_str1=hash.dHash(img1)
-dhash_str2=hash.dHash(img2)
-a_score=1-hash.hammingDist(ahash_str1, ahash_str2)*1./(128*128/4)
-p_score=1-hash.hammingDist(phash_str1, phash_str2)*1./(128*128/4)
-d_score=1-hash.hammingDist(dhash_str1, dhash_str2)*1 /(128*128/4)
-
-end=time.time()
-print('a_score:{},p_score:{},d_score{}'.format(a_score,p_score,d_score))
-print("Total Spend time：", str((end - start) / 60)[0:6] + "分钟")
-
-image1 = Image.open(r'D:\PBL\Program\Record\result_map\music_2.png')
-image2 = Image.open(r'D:\PBL\Program\Record\result_map\music.png')
-cosin = cosine.image_similarity_vectors_via_numpy(image1, image2)
-print('圖片餘弦相似度',cosin)
-
-recommend(cosin)
+raw_img1 = r'D:\PBL\Program\Record\result_map\single_sample\music_2.png'
+raw_img2 = r'D:\PBL\Program\Record\result_map\single_sample\music.png'
+hash_img1 = cv2.imread(raw_img1)
+hash_img2 = cv2.imread(raw_img2)
+cosine_img1 = Image.open(raw_img1)
+cosine_img2 = Image.open(raw_img2)
+console.similarily(hash_img1,hash_img2,cosine_img1,cosine_img2)
+console.discription()

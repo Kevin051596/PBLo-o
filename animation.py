@@ -1,4 +1,5 @@
 import os
+import shutil
 import librosa
 import matplotlib
 import matplotlib.pyplot as plt
@@ -11,6 +12,7 @@ from matplotlib import cm
 from collections import OrderedDict
 import librosa.display
 import pandas
+import console
 
 # Constants
 n_fft = 512
@@ -43,11 +45,6 @@ my_mask = matplotlib.colors.LinearSegmentedColormap('MyMask', cdict)
 plt.register_cmap(cmap=my_mask)
 
 
-def show_sample(list):
-    print(list)
-    df = pandas.DataFrame(data=list)
-    df.to_excel("test0.35.xlsx")
-
 def animation_specgram(path, peak=70.0, use_cqt=True):
   # Add several samples together
   '''
@@ -60,7 +57,7 @@ def animation_specgram(path, peak=70.0, use_cqt=True):
     '''  
   #sr, audio = readwav(path)
   fig ,ax = plt.subplots()
-  audio, sr = librosa.load(path,44100,duration= 3)
+  audio, sr = librosa.load(path,44100,duration= 10)
   audio = audio.astype(np.float)
   if use_cqt:
     C = librosa.cqt(audio, sr=sr, hop_length=hop_length, 
@@ -97,46 +94,6 @@ def animat(path):
   im2 = ax.matshow(genearate_data(array), cmap=my_mask)
   plt.yticks([20,40,60,80,100],['C7','C6','C5','C4','C3'])
   ax.xaxis.set_visible(False)
-  ani = animation.FuncAnimation(fig, animate, frames=400, interval=10, save_count=10)
-  ani.save('animation.mp4')
- 
-def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
-              use_cqt=True, peak=70.0):
-  """Build a CQT rowsXcols.
-  """
-  column = 0
-  N = len(list_of_paths)
-  try:
-    assert N == rows*cols
-  except AssertionError:
-    print ('N != rows*col')
-  fig, axes = plt.subplots(rows, cols, figsize=(10, 4.5), sharex='col', sharey='row')
-  fig.subplots_adjust(left=0.1, right=0.9, wspace=0.05, hspace=0.1)
-  
-  for i, path in enumerate(list_of_paths):
-    row = (int)(i / cols)
-    col = (int)(i % cols)
-    if rows == 1:
-      ax = axes[col]
-    elif cols == 1:
-      ax = axes[row]
-    else:
-      ax = axes[row, col]
-    
-    print (row, col, path, ax, peak, use_cqt)
-    animation_specgram(path, ax, i, fig, peak, use_cqt)
-    
-    ax.set_facecolor('white')
-    ax.set_yticks([20, 40, 60, 80, 100])
-    ax.set_yticklabels(['C7', 'C6', 'C5', 'C4', 'C3'])
-    ax.set_xticks([])
-    if col == 0 and row_labels:
-      ax.set_ylabel(row_labels[row])
-    if row == rows-1 and col_labels:
-      ax.set_xlabel(col_labels[col])
-
-  fig.savefig('plot3.png')
-  
-
-   
-  
+  ani = animation.FuncAnimation(fig, animate, frames=1600, interval=10, save_count=10)
+  console.discription()
+  console.animation_output(path, ani)

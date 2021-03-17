@@ -41,23 +41,8 @@ cdict  = {
 my_mask = matplotlib.colors.LinearSegmentedColormap('MyMask', cdict)
 plt.register_cmap(cmap=my_mask)
 
-
-def show_sample(list):
-    print(list)
-    df = pandas.DataFrame(data=list)
-    df.to_excel("test0.35.xlsx")
-
 def note_specgram(path, ax, i, peak=70.0, use_cqt=True):
-  # Add several samples together
-  '''
-  if isinstance(path, list):
-    for i, p in enumerate(path):
-      sr, a = readwav(f)
-      audio = a if i == 0 else a + audio
-  # Load one sample
-  else:  
-    '''  
-  #sr, audio = readwav(path)
+
   audio, sr = librosa.load(path,44100,duration= 3)
   audio = audio.astype(np.float)
   if use_cqt:
@@ -77,11 +62,10 @@ def note_specgram(path, ax, i, peak=70.0, use_cqt=True):
   mag = (librosa.power_to_db(mag ** 2, amin=1e-13, top_db=peak, ref=np.max) / peak) + 1
   mag[mag < min] = 0.2
   if (i+1)%2 == 0 : 
-    ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('brg'))
+    ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('breg'))
   else :
     ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('rainbow'))   
   ax.matshow(mag[:: -1, :], cmap=my_mask)
-  #show_sample(mag)
 
 def plot_notes(list_of_paths, rows=2, cols=1, col_labels=[], row_labels=[],
               use_cqt=True, peak=70.0):
