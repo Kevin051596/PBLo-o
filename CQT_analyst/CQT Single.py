@@ -5,7 +5,7 @@ import numpy as np
 from playsound import playsound
  
 #導入音檔
-y, sr = librosa.load('D:\PBL\music_3.wav',44100,duration=3)
+y, sr = librosa.load('D:\PBL\C3-C4.wav',44100,duration=3)
 #設定網格
 fig, ax = plt.subplots()
 #製圖

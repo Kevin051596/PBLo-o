@@ -11,6 +11,7 @@ import librosa.display
 import pandas
 import console
 import shutil
+import matplotlib.image as mpimg
 
 # Constants
 n_fft = 512
@@ -62,13 +63,28 @@ def note_specgram(path, peak=70.0, use_cqt=True,showdata=False):
   mag = (librosa.power_to_db(mag ** 2, amin=1e-13, top_db=peak, ref=np.max) / peak) + 1
 
   mag[mag < min] = 0.2
-  cax = ax.matshow(mag[:-1 , ::], cmap=plt.cm.get_cmap('rainbow'))
-  cax = ax.matshow(mag[: -1, :], cmap=my_mask)
+  im = ax.matshow(mag[:: -1, :], cmap=plt.cm.get_cmap('rainbow'))    
+  im = ax.matshow(mag[:: -1, :], cmap=my_mask)
 
   plt.yticks([20,40,60,80,100],['C7','C6','C5','C4','C3'])
   ax.xaxis.set_visible(False)
+  plt.show()
+
+  #ax.yaxis.set_visible(False)
   
   console.discription()
   console.newspectrum(path, fig)
   if showdata:
     console.xlsx(mag, path)
+  '''
+  path = r'D:\PBL\Program\Record\result_map\single_sample\{}.png'.format(path[35:-4])
+  image = mpimg.imread(path)
+  plt.axis('off')
+
+  fig = plt.imshow(image, interpolation='nearest')
+  fig.axes.get_xaxis().set_visible(False)
+  fig.axes.get_yaxis().set_visible(False)
+
+  '''
+  
+  plt.clf

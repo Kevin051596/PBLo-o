@@ -37,7 +37,7 @@ timers = {}
 def trans_mp3_to_wav(path, output):
     song = AudioSegment.from_file(path,format="mp3")
     song = song.set_frame_rate(44100)
-    song = song.set_channels(1)
+    song = song.set_channels(2)
     song = song.set_sample_width(2)
     song.export(output + ".wav", format="wav")
 
@@ -77,58 +77,68 @@ def notify(*args):
           """.format(args[0], fmt(args[1:])))
 
 def mp3towav(path):
-    mp3towav = r"{}.wav".format(path[7:-4])
-    mp3towav_path =r"D:\PBL\Program\Record\music_sample\{}.wav".format(path[7:-4])
+    mp3towav = r"{}.wav".format(path[11:-4])
+    mp3towav_path =r"D:\204 PBL\Program\Record\music_sample\{}.wav".format(path[11:-4])
     try:
         os.remove(mp3towav_path)
-        wav = trans_mp3_to_wav(path,'{}'.format(path[7:-4]))
-        shutil.move(mp3towav, r"D:\PBL\Program\Record\music_sample")
+        wav = trans_mp3_to_wav(path,'{}'.format(path[11:-4]))
+        shutil.move(mp3towav, r"D:\204 PBL\Program\Record\music_sample")
     except OSError as error:
-        wav = trans_mp3_to_wav(path,'{}'.format(path[7:-4]))
-        shutil.move(mp3towav, r"D:\PBL\Program\Record\music_sample")
+        wav = trans_mp3_to_wav(path,'{}'.format(path[11:-4]))
+        shutil.move(mp3towav, r"D:\204 PBL\Program\Record\music_sample")
         print(colors.YELLOW + "Wav_file({}) is create successfully".format(mp3towav) + colors.END)
     else:
         print(colors.YELLOW + "Wav_file({}) is update successfully".format(mp3towav) + colors.END)
 
 def newspectrum(path,fig):
-    specturm = r"{}.png".format(path[35:-4])
-    specturmpath = r"D:\PBL\Program\Record\result_map\single_sample\{}.png".format(path[35:-4])
+    specturm = r"{}.png".format(path[39:-4])
+    specturmpath = r"D:\204 PBL\Program\Record\result_map\single_sample\{}.png".format(path[39:-4])
     try:
         os.remove(specturmpath)
-        fig.savefig(specturm)
-        shutil.move(specturm,r"D:\PBL\Program\Record\result_map\single_sample")
+        fig.savefig(specturm,
+                    bbox_inches='tight',
+                    pad_inches=0,
+                    format='png',
+                    dpi= 300
+                    )
+        shutil.move(specturm,r"D:\204 PBL\Program\Record\result_map\single_sample")
     except OSError as error:
-        fig.savefig(specturm)
-        shutil.move(specturm,r"D:\PBL\Program\Record\result_map\single_sample")
+        fig.savefig(specturm,
+                    bbox_inches='tight',
+                    pad_inches=0,
+                    format='png',
+                    dpi =300
+                    )
+        shutil.move(specturm,r"D:\204 PBL\Program\Record\result_map\single_sample")
         print(colors.YELLOW + "File({}) is create successfully".format(specturm) + colors.END)
     else:
         print(colors.YELLOW + "File({}) is update successfully".format(specturm) + colors.END)
 
 def xlsx(list,path):
     df = pandas.DataFrame(data=list)
-    excel = r"{}.xlsx".format(path[35:-4])
-    excel_path = r"D:\PBL\Program\Record\data\{}.xlsx".format(path[35:-4])
+    excel = r"{}.xlsx".format(path[39:-4])
+    excel_path = r"D:\204 PBL\Program\Record\data\{}.xlsx".format(path[39:-4])
     try:
         os.remove(excel_path)
         df.to_excel(excel)
-        shutil.move(excel, r"D:\PBL\Program\Record\data")
+        shutil.move(excel, r"D:\204 PBL\Program\Record\data")
     except OSError as error:
         df.to_excel(excel)
-        shutil.move(excel, r"D:\PBL\Program\Record\data")
+        shutil.move(excel, r"D:\204 PBL\Program\Record\data")
         print(colors.YELLOW + "Excel_file({}) is create successfully".format(excel) + colors.END)
     else:
         print(colors.YELLOW + "Excel_file({}) is update successfully".format(excel) + colors.END)
 
 def animation_output(path,ani):
-    animation_path = r"D:\PBL\Program\Record\video\{}_animation.mp4".format(path[35:-4])
-    animation = r"{}_animation.mp4".format(path[35:-4])
+    animation_path = r"D:\204 PBL\Program\Record\video\{}_animation.mp4".format(path[39:-4])
+    animation = r"{}_animation.mp4".format(path[39:-4])
     try:
         os.remove(animation_path)
         ani.save(animation)
-        shutil.move(animation, r"D:\PBL\Program\Record\video")
+        shutil.move(animation, r"D:\204 PBL\Program\Record\video")
     except OSError as error:
         ani.save(animation)
-        shutil.move(animation, r"D:\PBL\Program\Record\video")
+        shutil.move(animation, r"D:\204 PBL\Program\Record\video")
         print(colors.YELLOW + "Animation({}) is create successfully".format(animation) + colors.END)
     else:
         print(colors.YELLOW + "Animation({}) is update successfully".format(animation) + colors.END)
@@ -144,9 +154,9 @@ def similarily(hash_img1,hash_img2,cosine_img1,cosine_img2):
 
     dhash_str1=picturesimilary.dHash(hash_img1)
     dhash_str2=picturesimilary.dHash(hash_img2)
-    a_score=1-picturesimilary.hammingDist(ahash_str1, ahash_str2)*1./(128*128/4)
-    p_score=1-picturesimilary.hammingDist(phash_str1, phash_str2)*1./(128*128/4)
-    d_score=1-picturesimilary.hammingDist(dhash_str1, dhash_str2)*1 /(128*128/4)
+    a_score=1-picturesimilary.hammingDist(ahash_str1, ahash_str2)*1./(32*32/4)
+    p_score=1-picturesimilary.hammingDist(phash_str1, phash_str2)*1./(32*32/4)
+    d_score=1-picturesimilary.hammingDist(dhash_str1, dhash_str2)*1 /(32*32/4)
 
     end=sysTime.time()
     print(colors.UNDERSCORE + 'a_score: {}, p_score: {}, d_score: {}'.format(a_score,p_score,d_score) + colors.END)
